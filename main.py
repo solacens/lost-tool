@@ -34,7 +34,7 @@ class keyPress(Thread):
     while True:
       if "LOST ARK" in get_current_window_name() and holding:
         pydirectinput.press('g')
-      time.sleep(0.01)
+      time.sleep(0.1)
 
 print("Hold left shift to G.")
 print("Press insert key to quit.")
