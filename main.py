@@ -6,6 +6,8 @@ import pydirectinput
 from pynput.keyboard import Key, Listener
 from win32gui import GetForegroundWindow, GetWindowText
 
+KEY_FOR_HOLD = Key.caps_lock
+
 holding = False
 
 def get_current_window_name():
@@ -13,12 +15,12 @@ def get_current_window_name():
 
 def on_press(key):
   global holding
-  if key == Key.shift_l:
+  if key == KEY_FOR_HOLD:
       holding = True
 
 def on_release(key):
   global holding
-  if key == Key.shift_l:
+  if key == KEY_FOR_HOLD:
     holding = False
   elif key == Key.insert:
     # Stop listener
