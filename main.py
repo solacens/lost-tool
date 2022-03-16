@@ -38,7 +38,7 @@ class keyPress(Thread):
         pydirectinput.press('g')
       time.sleep(0.1)
 
-print("Hold left shift to G.")
+print("Hold {0} to G.".format(KEY_FOR_HOLD))
 print("Press insert key to quit.")
 
 # Start key press thread
