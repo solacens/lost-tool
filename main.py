@@ -6,7 +6,7 @@ import pydirectinput
 from pynput.keyboard import Key, Listener
 from win32gui import GetForegroundWindow, GetWindowText
 
-KEY_FOR_HOLD = Key.caps_lock
+KEY_FOR_HOLD = Key.ctrl_l
 
 holding = False
 
