@@ -1,4 +1,4 @@
-cd $PSScriptRoot
+cd $PSScriptRoot/..
 
 python -m venv .
 

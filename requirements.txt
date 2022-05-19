@@ -4,6 +4,9 @@ PyGetWindow==0.0.9
 PyMsgBox==1.0.9
 pynput==1.7.6
 pyperclip==1.8.2
+PyQt5==5.15.6
+PyQt5-Qt5==5.15.2
+PyQt5-sip==12.10.1
 PyRect==0.1.4
 PyScreeze==0.1.28
 pytweening==1.0.4
