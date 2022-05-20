@@ -19,6 +19,14 @@ class GuiWindow(QMainWindow):
     self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
     self.setGeometry((screen.width() + screen.left() - PREFERRED_WIDTH), screen.top(), PREFERRED_WIDTH, PREFERRED_HEIGHT)
 
+    def toggleHide():
+      current_y = self.pos().y()
+      if current_y == 0:
+        self.move((screen.width() + screen.left() - PREFERRED_WIDTH), (screen.top() - PREFERRED_HEIGHT))
+      else:
+        self.move((screen.width() + screen.left() - PREFERRED_WIDTH), screen.top())
+    self.toggleHide = toggleHide
+
     font = QFont()
     font.setPointSize(8)
     font.setFamily("Consolas")
@@ -143,6 +151,7 @@ class Gui:
       self.window.listeners.pop("quit", None)
 
     self.toggleTransparency = self.window.toggleTransparency
+    self.toggleHide = self.window.toggleHide
 
     self.start = self.app.exec
     self.exit = self.app.exit

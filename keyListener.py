@@ -2,7 +2,7 @@ from pynput.keyboard import Key, Listener, GlobalHotKeys
 from keyPress import KeyPress
 
 class KeyListener:
-  def __init__(self, quitFunction, toggleTransparencyFunction):
+  def __init__(self, functions):
     keyPress = KeyPress()
 
     def on_press(key):
@@ -21,8 +21,11 @@ class KeyListener:
 
     self.toggleHolding = keyPress.toggle_holding
 
-    self.quitListener = GlobalHotKeys({'<ctrl>+q': quitFunction})
-    self.quitListener = GlobalHotKeys({'<ctrl>+t': toggleTransparencyFunction})
+    self.quitListener = GlobalHotKeys({
+      '<ctrl>+q': functions["quit"],
+      '<ctrl>+t': functions["toggleTransparency"],
+      '<ctrl>+h': functions["toggleHide"]
+    })
     self.quitListener.start()
 
     print("Key Listener Initialized.")

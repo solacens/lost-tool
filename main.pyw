@@ -3,7 +3,11 @@ from keyListener import KeyListener
 
 # Init modules
 gui = Gui()
-keyListener = KeyListener(gui.exit, gui.toggleTransparency)
+keyListener = KeyListener({
+  "quit": gui.exit,
+  "toggleTransparency": gui.toggleTransparency,
+  "toggleHide": gui.toggleHide
+})
 
 # Toggle G presser
 def toggleGPresser():
