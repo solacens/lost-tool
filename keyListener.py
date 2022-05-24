@@ -1,36 +1,16 @@
-from pynput.keyboard import Key, Listener, GlobalHotKeys
-from keyPress import KeyPress
+from pynput.keyboard import GlobalHotKeys
 
 class KeyListener:
-  def __init__(self, functions):
-    keyPress = KeyPress()
+  def __init__(self, config):
+    self.listener = GlobalHotKeys(config)
+    self.listener.start()
 
-    def on_press(key):
-      if key == keyPress.KEY_FOR_HOLD:
-          keyPress.holding = True
-
-    def on_release(key):
-      if key == keyPress.KEY_FOR_HOLD:
-        keyPress.holding = False
-      elif key == Key.insert:
-        # Stop listener
-        return False
-
-    ctrlListener = Listener(on_press=on_press, on_release=on_release)
-    ctrlListener.start()
-
-    self.toggleHolding = keyPress.toggle_holding
-
-    self.quitListener = GlobalHotKeys({
-      "<ctrl>+<shift>+q": functions["quit"],
-      "<ctrl>+<shift>+h": functions["toggleHide"]
-    })
-    self.quitListener.start()
-
-    print("Key Listener Initialized.")
+    print("<Key Listener> Initialized.")
 
 if __name__ == "__main__":
-  keyListener = KeyListener(lambda: exit(0)) # Should quit the blocking thread when using as module
+  keyListener = KeyListener({
+    "<ctrl>+<shift>+q": lambda: print("Quit") or exit(0)
+  })
 
   # Manually blocking
-  keyListener.quitListener.join()
+  keyListener.listener.join()
