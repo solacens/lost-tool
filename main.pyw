@@ -5,14 +5,13 @@ from keyListener import KeyListener
 gui = Gui()
 keyListener = KeyListener({
   "quit": gui.exit,
-  "toggleTransparency": gui.toggleTransparency,
   "toggleHide": gui.toggleHide
 })
 
 # Toggle G presser
 def toggleGPresser():
   keyListener.toggleHolding = not keyListener.toggleHolding
-  gui.log("State is now: {0}".format(keyListener.toggleHolding))
+  gui.log("Status now: {0}".format("On" if keyListener.toggleHolding else "Off"))
 gui.listeners["g_presser"](toggleGPresser)
 
 # Blocking

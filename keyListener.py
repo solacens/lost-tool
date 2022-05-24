@@ -22,9 +22,8 @@ class KeyListener:
     self.toggleHolding = keyPress.toggle_holding
 
     self.quitListener = GlobalHotKeys({
-      '<ctrl>+q': functions["quit"],
-      '<ctrl>+t': functions["toggleTransparency"],
-      '<ctrl>+h': functions["toggleHide"]
+      "<ctrl>+<shift>+q": functions["quit"],
+      "<ctrl>+<shift>+h": functions["toggleHide"]
     })
     self.quitListener.start()
 

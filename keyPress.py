@@ -1,7 +1,7 @@
 import time
 from threading import Thread
 
-import pydirectinput
+import pyautogui
 from pynput.keyboard import Key
 from win32gui import GetForegroundWindow, GetWindowText
 
@@ -16,5 +16,5 @@ class KeyPress(Thread):
   def run(self):
     while True:
       if ("LOST ARK" in GetWindowText(GetForegroundWindow())) and self.toggle_holding and self.holding:
-        pydirectinput.press('g')
+        pyautogui.press("g")
       time.sleep(0.2)

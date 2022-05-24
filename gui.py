@@ -2,29 +2,30 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from datetime import datetime
+from vision import VisionCore
+
 import sys
 
 class GuiWindow(QMainWindow):
   def __init__(self):
     super().__init__()
 
-    PREFERRED_DISPLAY = 1 # or 1, 2...
+    gameWindowRect = VisionCore.getWindowRect()
+
     PREFERRED_WIDTH = 300
     PREFERRED_HEIGHT = 300
-
-    screen = QDesktopWidget.screenGeometry(QDesktopWidget(), PREFERRED_DISPLAY)
 
     self.setWindowTitle("LOST TOOL")
     self.setAttribute(Qt.WA_TranslucentBackground)
     self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)
-    self.setGeometry((screen.width() + screen.left() - PREFERRED_WIDTH), screen.top(), PREFERRED_WIDTH, PREFERRED_HEIGHT)
+    self.setGeometry((gameWindowRect[2] - PREFERRED_WIDTH), gameWindowRect[1], PREFERRED_WIDTH, PREFERRED_HEIGHT)
 
     def toggleHide():
       current_y = self.pos().y()
       if current_y == 0:
-        self.move((screen.width() + screen.left() - PREFERRED_WIDTH), (screen.top() - PREFERRED_HEIGHT))
+        self.move((gameWindowRect[2] - PREFERRED_WIDTH), (gameWindowRect[1] - PREFERRED_HEIGHT))
       else:
-        self.move((screen.width() + screen.left() - PREFERRED_WIDTH), screen.top())
+        self.move((gameWindowRect[2] - PREFERRED_WIDTH), gameWindowRect[1])
     self.toggleHide = toggleHide
 
     font = QFont()
@@ -77,7 +78,7 @@ class GuiWindow(QMainWindow):
     textEdit = QTextEdit(self)
     textEdit.setReadOnly(True)
     textEdit.setFont(font)
-    layout.addWidget(textEdit, 1, 0, 1, 3)
+    layout.addWidget(textEdit, 2, 0, 1, 3)
     cleanLog = lambda: textEdit.setPlainText("")
     def log(str, type = "INFO"):
       now = datetime.now()
@@ -88,52 +89,56 @@ class GuiWindow(QMainWindow):
     self.listeners = {}
 
     g_presser_button = QPushButton()
-    g_presser_button.setText('Ctrl → G')
+    g_presser_button.setText("G Presser")
     g_presser_button.setFont(buttonFont)
     g_presser_button.clicked.connect(lambda: log("Toggling G Presser."))
     self.listeners["g_presser"] = g_presser_button.clicked.connect
     layout.addWidget(g_presser_button, 0, 0)
 
     fishing_button = QPushButton()
-    fishing_button.setText('Fishing')
+    fishing_button.setText("Fishing")
     fishing_button.setFont(buttonFont)
     fishing_button.clicked.connect(lambda: log("Start fishing."))
     self.listeners["fishing"] = fishing_button.clicked.connect
     layout.addWidget(fishing_button, 0, 1)
 
+    excavating_button = QPushButton()
+    excavating_button.setText("Excavating")
+    excavating_button.setFont(buttonFont)
+    excavating_button.clicked.connect(lambda: log("Start solving excavation mini-game."))
+    self.listeners["fishing"] = excavating_button.clicked.connect
+    layout.addWidget(excavating_button, 0, 2)
+
     chaos_button = QPushButton()
-    chaos_button.setText('Chaos')
+    chaos_button.setText("Chaos")
     chaos_button.setFont(buttonFont)
     chaos_button.clicked.connect(lambda: log("Start running on Chaos Dungeon."))
     self.listeners["chaos"] = chaos_button.clicked.connect
-    layout.addWidget(chaos_button, 0, 2)
+    layout.addWidget(chaos_button, 1, 0)
 
-    close_button = QPushButton(self)
-    close_button.setText('Quit')
-    close_button.setFont(buttonFont)
-    self.listeners["quit"] = close_button.clicked.connect
-    layout.addWidget(close_button, 2, 2)
+    clean_log_button = QPushButton()
+    clean_log_button.setText("Clean logs")
+    clean_log_button.setFont(buttonFont)
+    clean_log_button.clicked.connect(lambda: cleanLog())
+    layout.addWidget(clean_log_button, 3, 0)
 
     transparency_button = QPushButton(self)
-    transparency_button.setText('Lights ↑')
+    transparency_button.setText("UI Transparency")
     transparency_button.setFont(buttonFont)
     def toggleTransparency():
       if self.transparency_state:
-        transparency_button.setText('Lights ↓')
         bg.setStyleSheet(STYLESHEET_OPAQUE)
       else:
-        transparency_button.setText('Lights ↑')
         bg.setStyleSheet(STYLESHEET_TRANSPARENT)
       self.transparency_state = not self.transparency_state
     transparency_button.clicked.connect(toggleTransparency)
-    self.toggleTransparency = toggleTransparency
-    layout.addWidget(transparency_button, 2, 1)
+    layout.addWidget(transparency_button, 3, 1)
 
-    clean_log_button = QPushButton()
-    clean_log_button.setText('Clean logs')
-    clean_log_button.setFont(buttonFont)
-    clean_log_button.clicked.connect(lambda: cleanLog())
-    layout.addWidget(clean_log_button, 2, 0)
+    close_button = QPushButton(self)
+    close_button.setText("Quit")
+    close_button.setFont(buttonFont)
+    self.listeners["quit"] = close_button.clicked.connect
+    layout.addWidget(close_button, 3, 2)
 
     bg.setLayout(layout)
     self.show()
@@ -150,7 +155,6 @@ class Gui:
       self.window.listeners["quit"](lambda: self.app.exit())
       self.window.listeners.pop("quit", None)
 
-    self.toggleTransparency = self.window.toggleTransparency
     self.toggleHide = self.window.toggleHide
 
     self.start = self.app.exec
