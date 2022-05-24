@@ -1,17 +1,19 @@
+from PyQt5.QtCore import *
+
 from keyListener import KeyListener
 from vision import Vision
+from worker import Worker
 
 import pyautogui
 import time
 import threading
 
-DEBUG = True
+# DEBUG = True
+DEBUG = False
 
 class Actions:
   def __init__(self, gui):
     self.gui = gui
-    self.log = gui.log
-    # self.log = print
 
     self.vision = Vision()
 
@@ -28,52 +30,55 @@ class Actions:
 
     print("<Action> Initialized.")
 
-  def stopAll(self):
+  def stopAllThread(self, worker):
     if (not self.stopEvent.is_set()) and self.runningEvent.is_set():
-      self.log("STOPPING! Please wait for all actions done.", "Actions")
+      worker.log("Stopping! Please wait for all actions done.", "Actions")
       self.stopEvent.set()
 
-  def fishingOnce(self):
-    self.log("Cast.", "Fishing")
-    if not DEBUG:
-      pyautogui.press("e")
-    time.sleep(4)
-    if not DEBUG:
-      self.vision.waitTillFishingNotification()
-    else:
-      time.sleep(1)
-    self.log("Pull.", "Fishing")
-    if not DEBUG:
-      pyautogui.press("e")
+  def stopAll(self):
+    worker = Worker()
+    worker.logSignal.connect(self.gui.log)
+    worker.start(self.stopAllThread)
 
-  def fishingThread(self):
+  def fishingThread(self, worker):
     if self.runningEvent.is_set():
       return
-    self.log("Starting in 2s.", "Fishing")
+    worker.log("Starting in 2s.", "Fishing")
     self.runningEvent.set()
-    self.vision.core.focus()
     time.sleep(2)
 
     while True:
-      self.fishingOnce()
+      worker.log("Cast.", "Fishing")
+      if not DEBUG:
+        pyautogui.press("e")
+      time.sleep(4)
+      if not DEBUG:
+        self.vision.waitTillFishingNotification()
+      else:
+        time.sleep(1)
+      worker.log("Pull.", "Fishing")
+      if not DEBUG:
+        pyautogui.press("e")
       if self.stopEvent.is_set():
         break
       else:
-        self.log("Wait for next cast in 10s.", "Fishing")
+        worker.log("Wait for next cast in 10s.", "Fishing")
         time.sleep(10)
 
-    self.log("Stopped.", "Fishing")
+    worker.log("Stopped.", "Fishing")
     self.runningEvent.clear()
     self.stopEvent.clear()
 
   def fishing(self):
-    th = threading.Thread(target=self.fishingThread)
-    th.start()
-    return th
+    self.vision.core.focus()
+    worker = Worker()
+    worker.logSignal.connect(self.gui.log)
+    worker.start(self.fishingThread)
 
 if __name__ == "__main__":
   class GuiEmu:
     log = print
+    connect = lambda _1, x, _2: print("Connect:", x)
 
   action = Actions(GuiEmu())
 

@@ -5,7 +5,6 @@ class KeyRepeater:
   def __init__(self, gui):
     self.gui = gui
     self.log = gui.log
-    self.log = print
 
     keyPress = KeyPress()
 

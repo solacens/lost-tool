@@ -3,6 +3,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from datetime import datetime
 
+from worker import Worker
 from keyListener import KeyListener
 from vision import VisionCore
 
@@ -113,6 +114,7 @@ class GuiWindow(QMainWindow):
     excavating_button = QPushButton()
     excavating_button.setText("Excavating")
     excavating_button.setFont(buttonFont)
+    excavating_button.setEnabled(False) # TODO
     self.listeners["excavating"] = excavating_button.clicked.connect
     layout.addWidget(excavating_button, 0, 2)
 
@@ -124,6 +126,7 @@ class GuiWindow(QMainWindow):
     chaos_button = QPushButton()
     chaos_button.setText("Chaos")
     chaos_button.setFont(buttonFont)
+    chaos_button.setEnabled(False) # TODO
     self.listeners["chaos"] = chaos_button.clicked.connect
     layout.addWidget(chaos_button, 1, 0)
 
@@ -165,11 +168,11 @@ class GuiWindow(QMainWindow):
       print("Listener {0} not found.".format(name))
 
   def toggleHide(self):
-    current_y = self.pos().y()
-    if current_y == 0:
-      self.move((GAME_WINDOW_RECT[2] - PREFERRED_WIDTH), (GAME_WINDOW_RECT[1] - PREFERRED_HEIGHT))
+    hidden = self.isHidden()
+    if hidden:
+      self.show()
     else:
-      self.move((GAME_WINDOW_RECT[2] - PREFERRED_WIDTH), GAME_WINDOW_RECT[1])
+      self.hide()
 
   def toggleTransparency(self):
     if self.transparency_state:
@@ -186,16 +189,22 @@ class Gui:
     self.log = self.window.log
     self.connect = self.window.connect
 
-    self.keyListener = KeyListener({
-      "<ctrl>+<shift>+q": self.app.exit,
-      "<ctrl>+<shift>+h": self.window.toggleHide
-    })
-
+    worker = Worker()
+    worker.toggleHideSingal.connect(self.window.toggleHide)
+    worker.start(self.keyListenerThread)
     self.connect("quit", self.app.exit)
 
     self.start = self.app.exec
 
     print("<GUI> Initialized.")
+
+  def keyListenerThread(self, worker):
+    keyListener = KeyListener({
+      "<ctrl>+<shift>+q": self.app.exit,
+      "<ctrl>+<shift>+h": worker.toggleHide
+    })
+    # The function itself run as a thread, so need to join the threads
+    keyListener.listener.join()
 
 if __name__ == "__main__":
   gui = Gui()

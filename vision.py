@@ -169,27 +169,6 @@ class Vision:
     # crop_img = img[718:748, 739:1172]
     # cv2.imshow("cropped", crop_img)
 
-    # fishing
-    # img = cv2.imread("opencv/Screenshot_220521_132450.jpg")
-    # crop_img = img[465:500, 956:964]
-    # avg = crop_img.mean(axis=0).mean(axis=0); print(avg)
-    # img = cv2.imread("opencv/Screenshot_220521_132750.jpg")
-    # crop_img = img[465:500, 956:964]
-    # avg = crop_img.mean(axis=0).mean(axis=0); print(avg)
-    # img = cv2.imread("opencv/Screenshot_220521-1209-53.jpg")
-    # crop_img = img[465:500, 956:964]
-    # avg = crop_img.mean(axis=0).mean(axis=0); print(avg)
-    # img = cv2.imread("opencv/Screenshot_220521-1210-09.jpg")
-    # crop_img = img[465:500, 956:964]
-    # avg = crop_img.mean(axis=0).mean(axis=0); print(avg)
-    # img = cv2.imread("opencv/Screenshot_220521-1210-26.jpg")
-    # crop_img = img[465:500, 956:964]
-    # avg = crop_img.mean(axis=0).mean(axis=0); print(avg)
-    # img = cv2.imread("opencv/Screenshot_simon.jpg")
-    # crop_img = img[465:500, 956:964]
-    # avg = crop_img.mean(axis=0).mean(axis=0); print(avg)
-    # vc.imshow(crop_img)
-
     print("<Vision> Initialized.")
 
   def detectRapidColorChange(self, colorNew, colorOld = None, threshold = 0.8):
@@ -205,7 +184,7 @@ class Vision:
       colorNew = self.core.getFishingPromptAvagerColor()
       if self.detectRapidColorChange(colorNew, colorOld):
         break
-      time.sleep(0.05)
+      time.sleep(0.025)
 
 if __name__ == "__main__":
   Vision()
