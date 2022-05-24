@@ -18,3 +18,4 @@ __pycache__
 # False positive
 !Scripts/init*.ps1
 !Scripts/run*.ps1
+!Scripts/venv*.ps1
