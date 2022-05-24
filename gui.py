@@ -8,7 +8,7 @@ class GuiWindow(QMainWindow):
   def __init__(self):
     super().__init__()
 
-    PREFERRED_DISPLAY = 0 # or 1, 2...
+    PREFERRED_DISPLAY = 1 # or 1, 2...
     PREFERRED_WIDTH = 300
     PREFERRED_HEIGHT = 300
 
@@ -16,7 +16,7 @@ class GuiWindow(QMainWindow):
 
     self.setWindowTitle("LOST TOOL")
     self.setAttribute(Qt.WA_TranslucentBackground)
-    self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+    self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)
     self.setGeometry((screen.width() + screen.left() - PREFERRED_WIDTH), screen.top(), PREFERRED_WIDTH, PREFERRED_HEIGHT)
 
     def toggleHide():

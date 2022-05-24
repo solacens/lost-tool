@@ -17,4 +17,4 @@ class KeyPress(Thread):
     while True:
       if ("LOST ARK" in GetWindowText(GetForegroundWindow())) and self.toggle_holding and self.holding:
         pydirectinput.press('g')
-      time.sleep(0.5)
+      time.sleep(0.2)
