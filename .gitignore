@@ -15,6 +15,11 @@ pip-selfcheck.json
 # Python
 __pycache__
 
+# PyInstaller
+[Bb]uild
+[Dd]ist
+main.spec
+
 # False positive
 !Scripts/init*.ps1
 !Scripts/run*.ps1
