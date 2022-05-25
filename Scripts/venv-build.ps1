@@ -6,4 +6,4 @@ python -m venv .
 
 if (Test-Path -Path dist) { rm -r dist }
 
-pyinstaller --name=LOST_TOOL --icon=img/icon/icon.ico main.pyw
+pyinstaller "LOST TOOL.spec"
