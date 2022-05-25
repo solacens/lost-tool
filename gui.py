@@ -73,85 +73,83 @@ class GuiWindow(QMainWindow):
     layout = QGridLayout()
     layout.setContentsMargins(10, 10, 10, 10)
 
-    ###########
-    #
-    #  Row 4
-    #
-    ###########
+    # Log area
     self.textEdit = QTextEdit(self)
     self.textEdit.setReadOnly(True)
     self.textEdit.setFont(font)
-    layout.addWidget(self.textEdit, 3, 0, 1, 3)
-
-    ###########
-    #
-    #  Row 3
-    #
-    ###########
-    clean_log_button = QPushButton()
-    clean_log_button.setText("Clean logs")
-    clean_log_button.setFont(buttonFont)
-    clean_log_button.clicked.connect(lambda: self.textEdit.setPlainText(""))
-    layout.addWidget(clean_log_button, 2, 2)
 
     ###########
     #
     #  Row 1
     #
     ###########
-    key_repeater_button = QPushButton()
-    key_repeater_button.setText("Key Repeater")
-    key_repeater_button.setFont(buttonFont)
-    self.listeners["key_repeater"] = key_repeater_button.clicked.connect
-    layout.addWidget(key_repeater_button, 0, 0)
+    clean_log_button = QPushButton()
+    clean_log_button.setText("Clean logs")
+    clean_log_button.setFont(buttonFont)
+    clean_log_button.clicked.connect(lambda: self.textEdit.setPlainText(""))
+    layout.addWidget(clean_log_button, 0, 0)
 
-    fishing_button = QPushButton()
-    fishing_button.setText("Fishing")
-    fishing_button.setFont(buttonFont)
-    self.listeners["fishing"] = fishing_button.clicked.connect
-    layout.addWidget(fishing_button, 0, 1)
+    transparency_button = QPushButton(self)
+    transparency_button.setText("UI Transparency")
+    transparency_button.setFont(buttonFont)
+    transparency_button.clicked.connect(self.toggleTransparency)
+    layout.addWidget(transparency_button, 0, 1)
 
-    excavating_button = QPushButton()
-    excavating_button.setText("Excavating")
-    excavating_button.setFont(buttonFont)
-    excavating_button.setEnabled(False) # TODO
-    self.listeners["excavating"] = excavating_button.clicked.connect
-    layout.addWidget(excavating_button, 0, 2)
+    close_button = QPushButton(self)
+    close_button.setText("Quit")
+    close_button.setFont(buttonFont)
+    self.listeners["quit"] = close_button.clicked.connect
+    layout.addWidget(close_button, 0, 2)
 
     ###########
     #
     #  Row 2
     #
     ###########
+
+    layout.addWidget(self.textEdit, 1, 0, 1, 3)
+
+    ###########
+    #
+    #  Row 3
+    #
+    ###########
+    # key_repeater_button = QPushButton()
+    # key_repeater_button.setText("Key Repeater")
+    # key_repeater_button.setFont(buttonFont)
+    # self.listeners["key_repeater"] = key_repeater_button.clicked.connect
+    # layout.addWidget(key_repeater_button, 2, 0)
+
+    fishing_button = QPushButton()
+    fishing_button.setText("Fishing")
+    fishing_button.setFont(buttonFont)
+    self.listeners["fishing"] = fishing_button.clicked.connect
+    layout.addWidget(fishing_button, 2, 0)
+
+    excavating_button = QPushButton()
+    excavating_button.setText("Excavating")
+    excavating_button.setFont(buttonFont)
+    excavating_button.setEnabled(False) # TODO
+    self.listeners["excavating"] = excavating_button.clicked.connect
+    layout.addWidget(excavating_button, 2, 1)
+
     chaos_button = QPushButton()
     chaos_button.setText("Chaos")
     chaos_button.setFont(buttonFont)
     chaos_button.setEnabled(False) # TODO
     self.listeners["chaos"] = chaos_button.clicked.connect
-    layout.addWidget(chaos_button, 1, 0)
+    layout.addWidget(chaos_button, 2, 2)
 
     ###########
     #
-    #  Row 5
+    # Row Last
     #
     ###########
     stop_button = QPushButton()
     stop_button.setText("STOP!")
     stop_button.setFont(buttonFont)
     self.listeners["stop"] = stop_button.clicked.connect
-    layout.addWidget(stop_button, 4, 0)
-
-    transparency_button = QPushButton(self)
-    transparency_button.setText("UI Transparency")
-    transparency_button.setFont(buttonFont)
-    transparency_button.clicked.connect(self.toggleTransparency)
-    layout.addWidget(transparency_button, 4, 1)
-
-    close_button = QPushButton(self)
-    close_button.setText("Quit")
-    close_button.setFont(buttonFont)
-    self.listeners["quit"] = close_button.clicked.connect
-    layout.addWidget(close_button, 4, 2)
+    layout.addWidget(stop_button, 100, 0, 1, 3)
 
     self.bg.setLayout(layout)
     self.show()

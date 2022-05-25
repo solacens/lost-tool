@@ -24,7 +24,7 @@ class KeyRepeater:
 
     self.toggleHolding = keyPress.toggle_holding
 
-    self.gui.connect("key_repeater", self.toggleGPresser)
+    # self.gui.connect("key_repeater", self.toggleGPresser)
 
     print("<Key Repeater> Initialized.")
 
