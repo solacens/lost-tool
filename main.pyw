@@ -1,10 +1,10 @@
 from actions import Actions
 from gui import Gui
-from keyRepeater import KeyRepeater
+from keyReleaser import KeyReleaser
 
 # Init modules
 gui = Gui()
-keyRepeter = KeyRepeater(gui)
+keyReleaser = KeyReleaser()
 actions = Actions(gui)
 
 # Blocking
