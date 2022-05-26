@@ -1,3 +1,5 @@
+from constants import *
+
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -40,10 +42,7 @@ STYLESHEET_OPAQUE = """
   }
 """
 
-GAME_WINDOW_RECT = VisionCore.getWindowRect()
-
-PREFERRED_WIDTH = 300
-PREFERRED_HEIGHT = 300
+gameWindowRect = VisionCore.getWindowRect()
 
 class GuiWindow(QMainWindow):
   def __init__(self):
@@ -52,7 +51,7 @@ class GuiWindow(QMainWindow):
     self.setWindowTitle("LOST TOOL")
     self.setAttribute(Qt.WA_TranslucentBackground)
     self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)
-    self.setGeometry((GAME_WINDOW_RECT[2] - PREFERRED_WIDTH), GAME_WINDOW_RECT[1], PREFERRED_WIDTH, PREFERRED_HEIGHT)
+    self.setGeometry((gameWindowRect[2] - LT_PREFERRED_WIDTH), gameWindowRect[1], LT_PREFERRED_WIDTH, LT_PREFERRED_HEIGHT)
 
     font = QFont()
     font.setPointSize(8)
@@ -68,7 +67,7 @@ class GuiWindow(QMainWindow):
 
     self.bg = QWidget(self)
     self.bg.setStyleSheet(STYLESHEET_TRANSPARENT)
-    self.bg.setMinimumSize(PREFERRED_WIDTH, PREFERRED_HEIGHT)
+    self.bg.setMinimumSize(LT_PREFERRED_WIDTH, LT_PREFERRED_HEIGHT)
 
     layout = QGridLayout()
     layout.setContentsMargins(10, 10, 10, 10)

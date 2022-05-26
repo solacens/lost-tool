@@ -1,4 +1,5 @@
-# from time import sleep, time
+from constants import *
+
 import ctypes
 import cv2
 import numpy as np
@@ -6,13 +7,14 @@ import win32gui
 import win32ui
 import win32con
 import pyautogui
+import pytesseract
 import time
+import re
+import os
 
-WINDOW_TITLE = "LOST ARK"
+pytesseract.pytesseract.tesseract_cmd = os.path.dirname(os.path.realpath(__file__)) + r"/tesseract/tesseract.exe"
 
 class VisionCore:
-  # Window title
-  WINDOW_TITLE = "LOST ARK"
   # OpenCV
   cv2 = cv2
   # Desktop hwnd
@@ -27,25 +29,26 @@ class VisionCore:
 
   # Constructor
   def __init__(self):
-    window_rect = self.getWindowRect()
+    if True:
+      window_rect = self.getWindowRect()
 
-    self.width = window_rect[2] - window_rect[0]
-    self.height = window_rect[3] - window_rect[1]
-    self.pos_x = window_rect[0]
-    self.pos_y = window_rect[1]
+      self.width = window_rect[2] - window_rect[0]
+      self.height = window_rect[3] - window_rect[1]
+      self.pos_x = window_rect[0]
+      self.pos_y = window_rect[1]
 
-    # self.mount_img = cv2.imread("img/mount.jpg", cv2.IMREAD_UNCHANGED)
+      # self.mount_img = cv2.imread("img/mount.jpg", cv2.IMREAD_UNCHANGED)
 
-    self.hwnd = win32gui.GetDesktopWindow()
+      self.hwnd = win32gui.GetDesktopWindow()
 
     # print("Window size x{} y{}".format(self.width, self.height))
     # print("Window position x{} y{}".format(self.pos_x, self.pos_y))
 
   @staticmethod
   def getWindowRect(focus = False):
-    fullWindowTitle = WINDOW_TITLE
+    fullWindowTitle = LT_SEARCH_WINDOW_TITLE
     for x in pyautogui.getAllWindows():
-      if WINDOW_TITLE in x.title:
+      if LT_SEARCH_WINDOW_TITLE in x.title:
         fullWindowTitle = x.title
         break
     hwnd = win32gui.FindWindow(None, fullWindowTitle)
@@ -63,6 +66,7 @@ class VisionCore:
 
   def imshow(self, data):
     cv2.imshow("Imshow", data)
+    cv2.waitKey()
 
   def matchTemplateLocation(self, img, threshold, untilFound=False):
     result = cv2.matchTemplate(
@@ -135,6 +139,41 @@ class VisionCore:
     image = self.getScreenshot(relativeCoordinates=[956, 465, 964, 500])
     return image.mean(axis=0).mean(axis=0)
 
+  def handleTextGrayscaleTransform(self, image):
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    lower_white = np.array([0,0,0], dtype=np.uint8)
+    upper_white = np.array([100,100,255], dtype=np.uint8)
+    mask = cv2.inRange(hsv, lower_white, upper_white)
+    filtered = cv2.bitwise_and(image, image, mask= mask)
+    gray = cv2.cvtColor(filtered, cv2.COLOR_BGR2GRAY)
+    return gray
+
+  def getHealthBarScreenshot(self):
+    image = self.getScreenshot(relativeCoordinates=[627, 956, 857, 972])
+    return self.handleTextGrayscaleTransform(image)
+
+  def getLifeEnergyBarScreenshot(self):
+    image = self.getScreenshot(relativeCoordinates=[906, 916, 1036, 932])
+    return self.handleTextGrayscaleTransform(image)
+
+  def cleanText(self, text):
+    allowedText = re.sub(r"[^0-9(/+]", "", text)
+    return re.sub(r"(\(\+[0-9]+)?", "", allowedText)
+
+  def convertTextPair(self, text):
+    m = re.match(r"([0-9]+)/([0-9]+)", text)
+    if m is not None:
+      return (m.group(1), m.group(2))
+    return None
+
+  def getHealth(self):
+    image = self.getHealthBarScreenshot()
+    return self.convertTextPair(self.cleanText(pytesseract.image_to_string(image)))
+
+  def getLifeEnergy(self):
+    image = self.getLifeEnergyBarScreenshot()
+    return self.convertTextPair(self.cleanText(pytesseract.image_to_string(image)))
+
   def locateMapPointer(self):
     image = self.getScreenshot()
     pointer_color = np.array([255, 179, 97])
@@ -168,6 +207,9 @@ class Vision:
     # img = cv2.imread("opencv/Screenshot_2022-05-21_131745.png")
     # crop_img = img[718:748, 739:1172]
     # cv2.imshow("cropped", crop_img)
+
+    # print(self.core.getLifeEnergy())
+    # print(self.core.getHealth())
 
     print("<Vision> Initialized.")
 
