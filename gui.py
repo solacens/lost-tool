@@ -42,7 +42,7 @@ STYLESHEET_OPAQUE = """
   }
 """
 
-gameWindowRect = VisionCore.getWindowRect()
+WINDOW_RECT = VisionCore.getWindowRect()
 
 class GuiWindow(QMainWindow):
   def __init__(self):
@@ -51,7 +51,7 @@ class GuiWindow(QMainWindow):
     self.setWindowTitle("LOST TOOL")
     self.setAttribute(Qt.WA_TranslucentBackground)
     self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)
-    self.setGeometry((gameWindowRect[2] - LT_PREFERRED_WIDTH), gameWindowRect[1], LT_PREFERRED_WIDTH, LT_PREFERRED_HEIGHT)
+    self.setGeometry(WINDOW_RECT[0], WINDOW_RECT[1], LT_PREFERRED_WIDTH, LT_PREFERRED_HEIGHT)
 
     font = QFont()
     font.setPointSize(8)

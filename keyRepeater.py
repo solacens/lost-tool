@@ -8,8 +8,6 @@ import pyautogui
 import time
 
 class KeyRepeater:
-  toggleHolding = True
-
   holdingEvent = threading.Event()
   stopEvent = threading.Event()
 
@@ -24,30 +22,26 @@ class KeyRepeater:
         self.holdingEvent.set()
         th = threading.Thread(target=self.repeater, args=())
         th.start()
-
+        if LT_REPEATER_MINIMIUM_TIME is not None:
+          timer = threading.Timer(LT_REPEATER_MINIMIUM_TIME, self.stopEvent.set)
+          timer.start()
     def onRelease(key):
       if key == LT_REPEATER_KEY_FOR_HOLDING and (not self.stopEvent.is_set()):
-        self.stopEvent.set()
+        if LT_REPEATER_MINIMIUM_TIME is None:
+          self.stopEvent.set()
 
     self.listener = Listener(on_press=onPress, on_release=onRelease)
     self.listener.start()
 
-    self.gui.connect("key_repeater", self.toggleGPresser)
-
     print("<Key Repeater> Initialized.")
 
   def repeater(self):
+    counter = 1
     while self.holdingEvent.is_set() and (not self.stopEvent.is_set()):
       pyautogui.press("g")
-      time.sleep(0.1)
-    # Clear event after escape from loop
+      counter = counter + 1
     self.holdingEvent.clear()
     self.stopEvent.clear()
-
-  def toggleGPresser(self):
-    self.toggleHolding = not self.toggleHolding
-    self.log("Toggling.", "Key Repeater")
-    self.log("Status now: {0}".format("On" if self.toggleHolding else "Off"), "Key Repeater")
 
 if __name__ == "__main__":
   class GuiEmu:
@@ -57,3 +51,4 @@ if __name__ == "__main__":
   keyRepeater = KeyRepeater()
 
   # Any blocking function
+  keyRepeater.listener.join()

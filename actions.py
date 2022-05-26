@@ -21,7 +21,7 @@ class Actions:
     self.runningEvent = threading.Event()
 
     self.keyListener = KeyListener({
-      "<ctrl>+<shift>+f": self.fishing,
+      # "<ctrl>+<shift>+f": self.fishing,
       "<ctrl>+<shift>+s": self.stopAll
     })
 
