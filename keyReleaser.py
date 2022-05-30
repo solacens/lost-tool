@@ -7,7 +7,6 @@ class KeyReleaser:
     def onPress(key):
       try:
         if key.char == 'g':
-          print("Release G!")
           self.keyboard.release('g')
       except AttributeError:
         pass

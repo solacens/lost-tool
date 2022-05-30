@@ -213,10 +213,12 @@ class Vision:
 
     print("<Vision> Initialized.")
 
-  def detectRapidColorChange(self, colorNew, colorOld = None, threshold = 0.8):
+  def detectRapidColorChange(self, colorNew, colorOld = None, threshold = 0.9):
     if colorOld is None:
       return False
-    return not np.all([(abs(colorNew[0] / colorOld[0]) > threshold), (abs(colorNew[1] / colorOld[1]) > threshold), (abs(colorNew[2] / colorOld[2]) > threshold)])
+    change = not np.all([(abs(colorNew[0] / colorOld[0]) > threshold), (abs(colorNew[1] / colorOld[1]) > threshold), (abs(colorNew[2] / colorOld[2]) > threshold)])
+    # print(change)
+    return change
 
   def waitTillFishingNotification(self):
     colorOld = None
